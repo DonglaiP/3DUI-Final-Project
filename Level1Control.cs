@@ -1,4 +1,16 @@
-﻿using System.Collections;
+/* I did three game projects in total, one was my senior year C++ course individual project, another was my undergraduate dissertation
+project, and there is this one. This is the final project we had in a course named 3D UI and Augmented Reality. Among all three projects,
+this is my favorite. It's because this time I get to fully decide what kind of game I will be creating and how will I create it to be.
+
+Thinking about the word AR/VR, a game that I loved to play when I was a little kid crossed my mind: Virtua Cop. I thought, why not combine
+this clearly UI-oriented game with the new era of UI system (Augmented Reality)? There, we have this "Virtua Cop-AR version" with the exactly
+same gameplay and AR game scenes.
+
+Below is the code for controlling and managing events in the first level of the game. The game was done in Unity 3D with Vuforia toolkit.
+*/
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,7 +55,7 @@ public class Level1Control : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		// Game conditions to check which level or stage the game is going to and logging the information in this level.
 		if (points < 0)
 			points = 0;
 		
@@ -52,7 +64,6 @@ public class Level1Control : MonoBehaviour {
 			PlayerPrefs.SetInt ("tk", terroristsKilled);
 			Application.LoadLevel ("level2");
 		}
-
 
 		if (hostageKilled == 3)
 			gameObject.transform.tag = "over";
@@ -64,6 +75,7 @@ public class Level1Control : MonoBehaviour {
 			Application.LoadLevel ("end");
 		}
 
+		// Initiating hostages and keep the model of the hostage consistant when the scale of the system changes.
 		timer++;
 		hostage1 = GameObject.Find ("hostage1(Clone)");
 		if (hostage1 == null) {
@@ -71,41 +83,32 @@ public class Level1Control : MonoBehaviour {
 			newHostage.transform.localScale *= (workspace.transform.localScale.x / originalScale.x);
 			newHostage.transform.SetParent (workspace);
 		}
-
+		
+		// Periodically initiating terrorists.
 		if (timer % 300 == 0) {
-			int counter = Random.Range (2, 5);
+			int counter = Random.Range (1, 4);
 			GameObject terrorist = null;
 			switch (counter) {
-			case 2:
+			case 1:
 				terrorist = GameObject.Instantiate (terrorist1);
 				break;
-			case 3:
+			case 2:
 				terrorist = GameObject.Instantiate (terrorist3);
 				break;
-			case 4:
+			case 3:
 				terrorist = GameObject.Instantiate (terrorist4);
 				break;
-			case 5:
+			case 4:
 				terrorist = GameObject.Instantiate (terrorist5);
 				break;
 			}
 			terrorist.transform.position = spawn.transform.position;
 			terrorist.transform.SetParent (workspace);
 			terrorist.transform.localScale *= (workspace.transform.localScale.x / originalScale.x);
-			//terrorist.transform.SetParent (workspace);
 			people.Add (terrorist);
-//			int area = Random.Range (0, 1);
-//			if (area == 0) {
-//				terrorist.transform.position = new Vector3 (Random.Range (-9, -2), 2, Random.Range (3, 11));
-//			} else {
-			//terrorist.transform.position = new Vector3 (Random.Range (workspace.position.x+3f*workspace.localScale.x, workspace.position.x+11f*workspace.localScale.x), 2, Random.Range (workspace.position.z-15f*workspace.localScale.z, workspace.position.z + 2f*workspace.localScale.z));
-//			}
-
 		}
 
-	
-		
-
+		// Change the rotation and the scale of the scene based on touch input.
 		if(Input.touchCount == 1){  
 			Touch touch = Input.GetTouch (0);  
 			Vector2 deltaPos = touch.deltaPosition;           
